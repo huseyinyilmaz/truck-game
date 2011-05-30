@@ -1,47 +1,35 @@
  "strict mode";
+// check if a number is even
 Number.prototype.isEven=function(){
     return this%2===0;
-}
-window.svgns = "http://www.w3.org/2000/svg";
+};
+window.game = {
+    svgns : "http://www.w3.org/2000/svg",
+    ballMiddle : 375,
+    balldifference : 150,
+    balls:[]
+};
+
 window.onload=function(){
 
-    var svg = document.getElementById('svgContainer');
-    
-    var ballMiddle = 375;
-    var balldifference = 150;
-
-    var createCircle = function(x,y,color){
-	logger.startLog('createCircle');
-	logger.log('cx',x);
-	logger.log('cy',y);
-	logger.log('color',color);
-	var circle = document.createElementNS(svgns,'circle');
-	circle.setAttributeNS(null,'cx',x);
-	circle.setAttributeNS(null,'cy',y);
-	circle.setAttributeNS(null,'r',50);
-	circle.setAttributeNS(null,'fill',color);
-	circle.setAttributeNS(null,'stroke','black');
-	circle.setAttributeNS(null,'stroke-with','1px');
-	circle.setAttributeNS(null,'stroke-linecap','butt');
-	circle.setAttributeNS(null,'stroke-linejoint','miter');
-	circle.setAttributeNS(null,'stroke-opacity','1');
-	logger.endLog();
-	return circle;
-    };
+    game.svg = document.getElementById('svgContainer');
 
     var initializeballs = function(balls){
 	logger.startLog('initializeballs');
 	var length = balls.length;
 	if(length.isEven()){
-	    var startPoint = ballMiddle-(balldifference/2)-((length/2)-1)*balldifference;
+	    var startPoint = game.ballMiddle-(game.balldifference/2)-((length/2)-1)*game.balldifference;
 	}else{
-	    var startPoint = ballMiddle - Math.floor(length/2)*balldifference;
+	    var startPoint = game.ballMiddle - Math.floor(length/2)*game.balldifference;
 	}
 	logger.log('startPoint',startPoint);
 	for(var i=0;i<length;i++){
-	    var circle = createCircle(startPoint+i*balldifference,70,balls[i]);
-	    svg.appendChild(circle);
+	    var circle = game.createBall(startPoint+i*game.balldifference,70,balls[i]);
+	    game.balls.push(circle);
+	    game.svg.insertBefore(circle.DOM,game.truck.DOM);
+
 	}
+	circle.move(440,485,'1s');
 	logger.endLog();	
     };
     
@@ -49,16 +37,7 @@ window.onload=function(){
 
     //var balls = ['red','green','blue','yellow'];
     var balls = ['red','green','blue','yellow'];
-
+    game.initTruck();
     initializeballs(balls);
     
-    // var circle = createCircle(150,70,'#ff0000');
-    // svg.appendChild(circle);
-    // circle = createCircle(300,70,'#00ff00');
-    // svg.appendChild(circle);
-    // circle = createCircle(450,70,'#0000ff');
-    // svg.appendChild(circle);
-    // circle = createCircle(600,70,'#ffff00');
-    // svg.appendChild(circle);
-
 };
