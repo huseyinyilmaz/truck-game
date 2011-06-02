@@ -23,6 +23,7 @@ game.createBall = (function(){
 	    if(typeof duration === 'undefined'){
 		this.DOM.setAttributeNS(null,'cx',x);
 		this.DOM.setAttributeNS(null,'cy',y);
+		logger.log('ball moved to ' + x +','+y);
 	    }else{
 		var xanimation = this.animations.xanimation,
       		    yanimation = this.animations.yanimation;
@@ -34,6 +35,8 @@ game.createBall = (function(){
 
 		xanimation.beginElement();
 		yanimation.beginElement();
+		logger.log('start animation with' + x +','+y+' in ' + duration);
+
 	    };
 	    this.x = x;
 	    this.y = y;
@@ -45,7 +48,9 @@ game.createBall = (function(){
 	    this.isVisible = isVisible;
 	    this.DOM.setAttributeNS(null,'opacity',isVisible?'1':'0');
 	    logger.endLog();
-	}
+	},
+	defaultBallLocation:{x:440,y:485}
+	
     };
 
     return function(x,y,color){
@@ -82,18 +87,41 @@ game.createBall = (function(){
 	circle.appendChild(xanimation);
 	circle.appendChild(yanimation);
 
-	var ball = {
-	    DOM:circle,
-	    animations:{
-		'xanimation':xanimation,
-		'yanimation':yanimation},
-	    x:x,
-	    y:y,
-	    isVisible:true,
-	    color:color
-	};
-	ball.__proto__=ballProto;
+
+	var ball = Object.create(
+	    ballProto,
+	    {
+		DOM:{value:circle},
+		animations:{value:{xanimation:xanimation,yanimation:yanimation}},
+		x:{value:x},
+		y:{value:y},
+		isVisible:{value:true},
+		color:{value:color}
+	    }
+	);
+
 	return ball;
     };
 
 }());
+
+game.initializeballs = function(balls){
+	logger.startLog('initializeballs');
+	var length = balls.length;
+	if(length.isEven()){
+	    var startPoint = game.ballMiddle-(game.balldifference/2)-((length/2)-1)*game.balldifference;
+	}else{
+	    var startPoint = game.ballMiddle - Math.floor(length/2)*game.balldifference;
+	}
+	logger.log('startPoint',startPoint);
+	for(var i=0;i<length;i++){
+	    var circle = game.createBall(startPoint+i*game.balldifference,70,balls[i]);
+	    game.balls.push(circle);
+	    game.svg.insertBefore(circle.DOM,game.truck.DOM);
+
+	}
+	circle.move(440,485,'1s');
+	logger.endLog();	
+    };
+    
+    

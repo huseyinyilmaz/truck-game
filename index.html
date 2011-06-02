@@ -8,7 +8,12 @@
       logger.enableLog = true;
       logger.showTiming = true;
     </script>
-    <style type="text/css" media="screen">
+
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/black-tie/jquery-ui.css" rel="stylesheet" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js"></script>
+
+    <style type="text/css" media="screen" src="main.css">
       div.main
       {
 	  border-style:solid;
@@ -51,7 +56,8 @@
 	 stroke-width="1px"
 	 stroke-linecap="butt"
 	 stroke-linejoin="miter"
-	 stroke-opacity="1"/>
+	 stroke-opacity="1">
+       </path>
       <path
          d="m 502.41797,245.14397 -1.11648,-14.5143 -120.58031,0 -30.14508,58.05719 -312.615631,-3.34945 52.474766,136.21109 312.615625,-3.34945 -1.11648,-177.52102 z"
          id="trunk"
@@ -61,17 +67,6 @@
 	 stroke-linecap="butt"
 	 stroke-linejoin="miter"
 	 stroke-opacity="1"/>
-
-      <!-- <path -->
-      <!--    d="m 291,626.86218 a 65.5,65.5 0 1 1 -131,0 65.5,65.5 0 1 1 131,0 z" -->
-      <!--    transform="translate(-13.594409,-128.69744)" -->
-      <!--    id="rear_wheel" -->
-      <!-- 	 fill="#333333" -->
-      <!-- 	 stroke="#000000" -->
-      <!-- 	 stroke-width="1px" -->
-      <!-- 	 stroke-linecap="butt" -->
-      <!-- 	 stroke-linejoin="miter" -->
-      <!-- 	 stroke-opacity="1"/> -->
 
       <circle
 	  cx="190"
@@ -85,17 +80,6 @@
 	  stroke-linejoin="miter"
 	  stroke-opacity="1"/>
 
-      <!-- <path -->
-      <!--    d="m 291,626.86218 a 65.5,65.5 0 1 1 -131,0 65.5,65.5 0 1 1 131,0 z" -->
-      <!--    transform="translate(296.20101,-128.697)" -->
-      <!--    id="front_wheel" -->
-      <!-- 	 fill="#333333" -->
-      <!-- 	 stroke="#000000" -->
-      <!-- 	 stroke-width="1px" -->
-      <!-- 	 stroke-linecap="butt" -->
-      <!-- 	 stroke-linejoin="miter" -->
-      <!-- 	 stroke-opacity="1"/> -->
-
       <circle
 	  cx="550"
 	  cy="500"
@@ -108,7 +92,11 @@
 	  stroke-linejoin="miter"
 	  stroke-opacity="1"/>
 
-    </g>
+      <animateMotion
+	  id="truckAnimation"
+	  begin="indefinite" fill="freeze"/>
+
+      </g>
   </svg>
 </div>
 </body>
