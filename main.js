@@ -9,6 +9,7 @@ window.game = {
     ballMiddle : 375,
     balldifference : 150,
     balls:[],
+    colors:['red','green','blue','yellow'],
     applyConfig:function(color,count){
 	this.currentColor = color;
 	this.ballCount=count;
@@ -24,19 +25,44 @@ window.game = {
             		    closeOnEscape:true,
       			    modal:true
 			    });
+    },
+    openConfig:function(){
+	game.configDialog.dialog('open');
+    },
+    init:function(svg,dialog,configLink){
+	this.svg = svg;
+	this.applyConfig('random',4);
+	this.initConfig(dialog);
+	this.initTruck();
+	this.initBalls(this.colors);
+	var that=this;
+	$(configLink).click(function(){that.openConfig();});
+    },
+    startGame:function(){
+	this.instance = {
+	    "color":this.currentColor==="random"?this.colors[Math.floor(Math.random()*this.colors.length)]:this.currentColor,
+	    "count":this.ballCount
+	};
+	this.truck.moveToMiddle();
+	this.startBalls();
+	
+    },
+    clearGame:function(){
+	
+    },
+    removeAllEvents:function(){
+	this.balls.forEach(function(item){
+			       item.removeClickHandler();
+			   });
     }
 };
 			 
 
 
 window.onload=function(){
-    game.svg = document.getElementById('svgContainer');
-    var balls = ['red','green','blue','yellow'];
-    game.initTruck();
-    game.initializeballs(balls);
-    game.truck.move(600,0,'3s');
-    var configDialogElement = document.getElementById('configDialog');
-    game.initConfig(configDialogElement);
-    game.configDialog.dialog('open');
+    game.init(document.getElementById('svgContainer'),
+	      document.getElementById('configDialog'),
+	      document.getElementById('configLink'));
 
+    game.startGame();
 };

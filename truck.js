@@ -18,7 +18,17 @@ game.initTruck = (function(){
 			      this.y = y;
 			      logger.endLog();
 			      },
-			  defaultTruckLocationx:220
+//			  defaultTruckLocationx:220
+			  startRoadLength:820,
+			  moveToMiddle:function(){
+			      this.move(820,0,'1s');
+			  },
+			  moveToEnd:function(){
+			      this.move(820,0,'1s');
+			  },
+			  moveToStart:function(){
+			      this.move(-1640,0);
+			  }
 		      };
 		      return function(){
 			  var domElement = document.getElementById('truck');
@@ -28,9 +38,13 @@ game.initTruck = (function(){
 			      {DOM:{value:domElement},
 			       animation:{value:animation},
 			       x:{value:220},
-			       y:{value:220}
+			       y:{value:220},
+			       location:{value:'start'}
 			      } );
+			  
+			  this.truck = truck;
+			  //move truck to start location
+			  truck.move(-600,200);
 
-			  game.truck = truck;
 		      };
 		  }());

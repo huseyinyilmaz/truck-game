@@ -49,7 +49,15 @@ game.createBall = (function(){
 	    this.DOM.setAttributeNS(null,'opacity',isVisible?'1':'0');
 	    logger.endLog();
 	},
+	addClickHandler:function(){
+	    this.DOM.addEventListener('click',this.clickHandler,false);
+	},
+	removeClickHandler:function(){
+	    this.DOM.removeEventListener('click',this.clickHandler,false);
+	},
+
 	defaultBallLocation:{x:440,y:485}
+	
 	
     };
 
@@ -105,23 +113,44 @@ game.createBall = (function(){
 
 }());
 
-game.initializeballs = function(balls){
-	logger.startLog('initializeballs');
-	var length = balls.length;
-	if(length.isEven()){
-	    var startPoint = game.ballMiddle-(game.balldifference/2)-((length/2)-1)*game.balldifference;
-	}else{
-	    var startPoint = game.ballMiddle - Math.floor(length/2)*game.balldifference;
-	}
-	logger.log('startPoint',startPoint);
-	for(var i=0;i<length;i++){
-	    var circle = game.createBall(startPoint+i*game.balldifference,70,balls[i]);
-	    game.balls.push(circle);
-	    game.svg.insertBefore(circle.DOM,game.truck.DOM);
+game.initBalls = function(balls){
+    logger.startLog('initializeballs');
+    balls.forEach(function(item){
 
-	}
-	circle.move(440,485,'1s');
-	logger.endLog();	
-    };
+		      //used in click handler
+		      var ball = this.createBall(-100,-100,item),
+		      game=this;
+
+		      this.balls.push(ball);
+		      this.svg.insertBefore(ball.DOM,this.truck.DOM);
+		      
+		      ball.clickHandler = function(){
+			  this.removeClickHandler();
+			  this.move(440,485,'1s');
+			  game.removeAllEvents();
+		      }.bind(ball);
+		  }.bind(this));
+    logger.endLog();	
+};
     
+game.startBalls = function(){
+    logger.startLog('startBalls');
+    var balls = this.balls,
+    game = this,
+    length = balls.length;
     
+    if(length.isEven()){
+	var startPoint = this.ballMiddle-(this.balldifference/2)-((length/2)-1)*this.balldifference;
+    }else{
+	var startPoint = this.ballMiddle - Math.floor(length/2)*this.balldifference;
+    }
+
+    logger.log('startPoint',startPoint);
+    balls.forEach(function(item,index){
+		      logger.log(index);
+		      item.move(startPoint+index*game.balldifference,70);
+		      item.addClickHandler();
+		  });
+	
+    logger.endLog();
+};    
