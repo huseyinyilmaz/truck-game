@@ -18,7 +18,7 @@ game.initTruck = (function(){
 			      this.y = y;
 			      logger.endLog();
 			      },
-//			  defaultTruckLocationx:220
+
 			  startRoadLength:820,
 			  moveToMiddle:function(){
 			      this.move(820,0,'1s');

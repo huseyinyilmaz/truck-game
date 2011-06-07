@@ -20,23 +20,24 @@ game.createBall = (function(){
     var ballProto={
 	move:function(x,y,duration){
 	    logger.startLog('ballProto.move');
+	    var xanimation = this.animations.xanimation,
+      	        yanimation = this.animations.yanimation;
 	    if(typeof duration === 'undefined'){
+		xanimation.removeAttributeNS(null,'to');
+		xanimation.removeAttributeNS(null,'dur');
+		yanimation.removeAttributeNS(null,'to');
+		yanimation.removeAttributeNS(null,'dur');
 		this.DOM.setAttributeNS(null,'cx',x);
 		this.DOM.setAttributeNS(null,'cy',y);
 		logger.log('ball moved to ' + x +','+y);
 	    }else{
-		var xanimation = this.animations.xanimation,
-      		    yanimation = this.animations.yanimation;
-		
 		xanimation.setAttributeNS(null,'to',x);
 		xanimation.setAttributeNS(null,'dur',duration);
 		yanimation.setAttributeNS(null,'to',y);
 		yanimation.setAttributeNS(null,'dur',duration);
-
 		xanimation.beginElement();
 		yanimation.beginElement();
 		logger.log('start animation with ' + x +','+y+' in ' + duration);
-
 	    };
 	    this.x = x;
 	    this.y = y;
@@ -55,10 +56,7 @@ game.createBall = (function(){
 	removeClickHandler:function(){
 	    this.DOM.removeEventListener('click',this.clickHandler,false);
 	},
-
 	defaultBallLocation:{x:440,y:485}
-	
-	
     };
 
     return function(x,y,color){
@@ -128,7 +126,6 @@ game.initBalls = function(colors){
 			   this.removeClickHandler();
 			   this.move(440,485,'1s');
 			   game.removeAllEvents();
-//			   game.ballClicked(this);
 		       }.bind(ball);
 		   }.bind(this));
 
