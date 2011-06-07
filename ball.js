@@ -35,7 +35,7 @@ game.createBall = (function(){
 
 		xanimation.beginElement();
 		yanimation.beginElement();
-		logger.log('start animation with' + x +','+y+' in ' + duration);
+		logger.log('start animation with ' + x +','+y+' in ' + duration);
 
 	    };
 	    this.x = x;
@@ -91,10 +91,8 @@ game.createBall = (function(){
 	yanimation.setAttributeNS(null, 'begin', 'indefinite');
 	yanimation.setAttributeNS(null,'dur','1s');
 	yanimation.setAttributeNS(null,'fill','freeze');
-
 	circle.appendChild(xanimation);
 	circle.appendChild(yanimation);
-
 
 	var ball = Object.create(
 	    ballProto,
@@ -107,37 +105,41 @@ game.createBall = (function(){
 		color:{value:color}
 	    }
 	);
+	var game = this;
+	//add endEvent to Y animation
+	yanimation.addEventListener('endEvent',function(){game.ballClicked(this);}.bind(ball),false);
 
 	return ball;
     };
 
 }());
 
-game.initBalls = function(balls){
-    logger.startLog('initializeballs');
-    balls.forEach(function(item){
-
-		      //used in click handler
-		      var ball = this.createBall(-100,-100,item),
-		      game=this;
-
-		      this.balls.push(ball);
-		      this.svg.insertBefore(ball.DOM,this.truck.DOM);
+game.initBalls = function(colors){
+    logger.startLog('game.initBalls');
+    var balls = [];
+    colors.forEach(function(item){
+		       //create a new Ball
+		       var ball = this.createBall(-100,-100,item),
+		           game = this;
+		       balls.push(ball);
+		       this.svg.insertBefore(ball.DOM,this.truck.DOM);
 		      
-		      ball.clickHandler = function(){
-			  this.removeClickHandler();
-			  this.move(440,485,'1s');
-			  game.removeAllEvents();
-		      }.bind(ball);
-		  }.bind(this));
-    logger.endLog();	
+		       ball.clickHandler = function(){
+			   this.removeClickHandler();
+			   this.move(440,485,'1s');
+			   game.removeAllEvents();
+//			   game.ballClicked(this);
+		       }.bind(ball);
+		   }.bind(this));
+
+    logger.endLog();
+    return balls;
 };
     
 game.startBalls = function(){
     logger.startLog('startBalls');
-    var balls = this.balls,
-    game = this,
-    length = balls.length;
+    var balls = this.instance.currentBalls,
+        length = balls.length;
     
     if(length.isEven()){
 	var startPoint = this.ballMiddle-(this.balldifference/2)-((length/2)-1)*this.balldifference;
@@ -148,9 +150,21 @@ game.startBalls = function(){
     logger.log('startPoint',startPoint);
     balls.forEach(function(item,index){
 		      logger.log(index);
-		      item.move(startPoint+index*game.balldifference,70);
+		      item.move(startPoint+index*this.balldifference,70);
 		      item.addClickHandler();
-		  });
+		  }.bind(this));
 	
     logger.endLog();
 };    
+
+game.ballClicked = function(ball){
+    if(ball.color === this.instance.color){
+	alert('game complete');
+	ball.setVisible(true);
+	this.startGame();
+    }else{
+	alert('wrong ball');
+	this.startBalls();
+    }
+    
+};
