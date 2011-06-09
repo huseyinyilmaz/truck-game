@@ -46,6 +46,8 @@ window.game = {
 			    });
     },
     openConfig:function(){
+	$('#color_'+this.currentColor).attr('checked','checked');
+	$('#count'+this.ballCount).attr('checked','checked');
 	game.configDialog.dialog('open');
     },
     init:function(svg,dialog,configLink,middleText){
