@@ -18,19 +18,29 @@ window.game = {
     ballMiddle : 375,
     balldifference : 150,
     balls:[],
+
     colors:['red','green','blue','yellow'],
+    questions:{'red':'Hangisi kirmizi?',
+	     'green':'Hangisi Yesil?',
+	     'blue':'Hangisi mavi?',
+	     'yellow':'Hangisi sari?'},
+    wrongBallMessage:'Yanlis topu sectin, bir daha dene',
+    rightBallMessage:'Dogru topu sectin Bravo',
+
     applyConfig:function(color,count){
 	this.currentColor = color;
 	this.ballCount=count;
+	this.startGame();
     },
     initConfig:function(element){
 	var that = this;//for dialog onClick event
 	this.configDialog = $(element).dialog({ autoOpen: false,
 						title: 'Game Configuration',
 						buttons:{save:function(){
-							     that.applyConfig();
-							     game.configDialog.dialog('close');
-							     alert('apply Changes');}},
+							     var color =$('input[name=color]:checked:radio').val();
+							     var count =$('input[name=count]:checked:radio').val();
+							     that.applyConfig(color,count);
+							     game.configDialog.dialog('close');}},
             		    closeOnEscape:true,
       			    modal:true
 			    });
@@ -38,13 +48,13 @@ window.game = {
     openConfig:function(){
 	game.configDialog.dialog('open');
     },
-    init:function(svg,dialog,configLink,description){
+    init:function(svg,dialog,configLink,middleText){
 	this.svg = svg;
-	this.applyConfig('random',4);
 	this.initConfig(dialog);
 	this.initTruck();
+	this.middleText = middleText;
+	this.applyConfig('random',"4");
 	this.initBalls(this.colors);
-	this.description = description;
 	// Add config link event.
 	$(configLink).click(function(){this.openConfig();}.bind(this));
     },
@@ -53,15 +63,19 @@ window.game = {
 	//clear old game data
 	this.clearGame();
 	// Initialize current variables
-	var ballCount = this.ballCount;
 	var colors = this.colors;
 	var currentColor = this.currentColor;
+	var ballCount = this.ballCount;
+	if(ballCount === "random"){
+	    ballCount = Math.floor(Math.random()*4)+1;
+	}else{
+	    ballCount = parseInt(ballCount);
+	}
 	var currentColors = [];
 	//if currentColor is not random, add chosen color to list
 	if(currentColor!== 'random'){
-	    logger.log('Color is preset. ' + this.currentColor + ' was added to array.');
-	    currentColors.push(this.currentColor);
-	    ballCount -= 1;
+	    logger.log('Color is preset. ' + currentColor + ' was added to array.');
+	    currentColors.push(currentColor);
 	}
 	//fill rest of the ball list with random colors
 	while(currentColors.length<ballCount){
@@ -72,14 +86,18 @@ window.game = {
 		logger.log(choosenColor + ' was added to current ball list.');
 	    }
 	}
-
+	if(currentColor === 'random'){
+	    currentColor = currentColors[0];
+	}
 	var currentBalls = this.initBalls(currentColors.shuffle());
 
 	this.instance = {
-	    "color":this.currentColor==="random"?this.colors[Math.floor(Math.random()*this.colors.length)]:currentColor,
-	    "count":this.ballCount,
+	    "color": currentColor,
+	    "count":ballCount,
 	    "currentBalls":currentBalls
 	};
+
+	this.askQuestion();
 	this.startBalls();
 	this.truck.moveToMiddle();
 	logger.endLog();
@@ -99,8 +117,11 @@ window.game = {
 			       item.removeClickHandler();
 			   });
     },
-    setDescription:function(description){
-	this.description.innerHTML = description;
+    setMiddleText:function(text){
+	this.middleText.textContent = text;
+    },
+    askQuestion:function(){
+	this.setMiddleText(this.questions[this.instance.color]);
     }
     
 
@@ -112,7 +133,7 @@ window.onload=function(){
     game.init(document.getElementById('svgContainer'),
 	      document.getElementById('configDialog'),
 	      document.getElementById('configLink'),
-	      document.getElementById('description'));
+	      document.getElementById('svgText'));
 
     game.startGame();
 };

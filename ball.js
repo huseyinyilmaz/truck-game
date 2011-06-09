@@ -155,13 +155,22 @@ game.startBalls = function(){
 };    
 
 game.ballClicked = function(ball){
+    ball.setVisible(false);
     if(ball.color === this.instance.color){
-	alert('game complete');
-	ball.setVisible(true);
-	this.startGame();
+	this.setMiddleText(this.rightBallMessage);
+	this.finalBall = ball;
+	this.truck.moveToEnd();
+	setTimeout('game.restartGame()',2000);
     }else{
-	alert('wrong ball');
+	this.setMiddleText(this.wrongBallMessage);
+	setTimeout('game.askQuestion()',2000);
 	this.startBalls();
     }
-    
+};
+
+game.restartGame = function(){
+    var ball = this.finalBall;
+    this.finalBall = undefined;
+    ball.setVisible(true);
+    this.startGame();
 };

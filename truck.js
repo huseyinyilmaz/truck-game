@@ -21,13 +21,12 @@ game.initTruck = (function(){
 
 			  startRoadLength:820,
 			  moveToMiddle:function(){
+			      this.move(-600,200);
 			      this.move(820,0,'1s');
 			  },
 			  moveToEnd:function(){
-			      this.move(820,0,'1s');
-			  },
-			  moveToStart:function(){
-			      this.move(-1640,0);
+			      this.move(220,200);
+			      this.move(800,0,'1s');
 			  }
 		      };
 		      return function(){
