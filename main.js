@@ -38,12 +38,13 @@ window.game = {
     openConfig:function(){
 	game.configDialog.dialog('open');
     },
-    init:function(svg,dialog,configLink){
+    init:function(svg,dialog,configLink,description){
 	this.svg = svg;
 	this.applyConfig('random',4);
 	this.initConfig(dialog);
 	this.initTruck();
 	this.initBalls(this.colors);
+	this.description = description;
 	// Add config link event.
 	$(configLink).click(function(){this.openConfig();}.bind(this));
     },
@@ -97,7 +98,12 @@ window.game = {
 	this.instance.currentBalls.forEach(function(item){
 			       item.removeClickHandler();
 			   });
+    },
+    setDescription:function(description){
+	this.description.innerHTML = description;
     }
+    
+
 };
 			 
 
@@ -105,7 +111,8 @@ window.game = {
 window.onload=function(){
     game.init(document.getElementById('svgContainer'),
 	      document.getElementById('configDialog'),
-	      document.getElementById('configLink'));
+	      document.getElementById('configLink'),
+	      document.getElementById('description'));
 
     game.startGame();
 };
