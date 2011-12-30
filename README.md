@@ -1,6 +1,8 @@
 Truck Game
 ==========
 
+http://dev.yilmazhuseyin.com/truck/  (Firefox only)
+
 This is a simple tool that can be use to teach children about colors as well as how to use mouse properly.
 
 It is written in ecmascript5. Because of some mozilla spesific api is used, It will only work in firefox for now. After the development process, I will add chrome support. Game is drawn using SVG.
